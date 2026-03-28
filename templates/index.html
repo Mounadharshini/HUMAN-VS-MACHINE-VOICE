@@ -21,16 +21,14 @@
 <p>Detect Human vs AI Generated Voice</p>
 </header>
 
-
 <!-- TOGGLE -->
 
 <div class="mode-switch">
 
-<button id="recordTab" class="active">🎤 Live Record</button>
-<button id="uploadTab">📂 Upload Audio</button>
+<button id="recordTab" class="active">Live Record</button>
+<button id="uploadTab">Upload Audio</button>
 
 </div>
-
 
 <div class="main-grid">
 
@@ -51,7 +49,6 @@
 
 </div>
 
-
 <!-- UPLOAD -->
 
 <div id="uploadSection">
@@ -70,7 +67,6 @@ Choose Audio
 </div>
 
 </div>
-
 
 <!-- RIGHT PANEL -->
 
@@ -98,15 +94,25 @@ Analyze Voice
 
 </div>
 
-
 <script>
+
+/* SHOW FILE NAME + AUDIO PREVIEW */
 
 document.getElementById("audioFile").addEventListener("change",function(){
 
-document.getElementById("fileName").textContent=this.files[0].name
+let file=this.files[0]
+
+document.getElementById("fileName").textContent=file.name
+
 document.getElementById("hiddenAudio").files=this.files
 
+// PLAY AUDIO PREVIEW
+let player=document.getElementById("player")
+player.src=URL.createObjectURL(file)
+
 })
+
+/* TAB SWITCH */
 
 let recordTab=document.getElementById("recordTab")
 let uploadTab=document.getElementById("uploadTab")
