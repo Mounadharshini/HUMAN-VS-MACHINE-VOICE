@@ -15,8 +15,7 @@ labels = {
     "possible": 2
 }
 
-X = []
-y = []
+X, y = [], []
 
 print("Loading dataset...")
 
@@ -27,7 +26,7 @@ for label in labels:
         continue
     for file in os.listdir(folder):
         path = os.path.join(folder, file)
-        features = extract_features(path, augment=True)  # apply augmentation during loading
+        features = extract_features(path)  # removed augment=True
         if features is not None:
             X.append(features)
             y.append(labels[label])
@@ -46,9 +45,8 @@ X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42, stratify=y
 )
 
-# --- Improved CNN Model ---
+# --- CNN Model ---
 model = Sequential()
-
 model.add(Conv2D(32,(3,3),activation='relu',input_shape=X.shape[1:]))
 model.add(BatchNormalization())
 model.add(MaxPooling2D((2,2)))
@@ -62,20 +60,13 @@ model.add(BatchNormalization())
 model.add(MaxPooling2D((2,2)))
 
 model.add(Flatten())
-
-model.add(Dense(256,activation='relu'))
+model.add(Dense(256, activation='relu'))
 model.add(Dropout(0.5))
-
-model.add(Dense(128,activation='relu'))
+model.add(Dense(128, activation='relu'))
 model.add(Dropout(0.3))
+model.add(Dense(3, activation='softmax'))
 
-model.add(Dense(3,activation='softmax'))
-
-model.compile(
-    optimizer='adam',
-    loss='categorical_crossentropy',
-    metrics=['accuracy']
-)
+model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
 callbacks = [
     EarlyStopping(patience=6, restore_best_weights=True),
@@ -83,13 +74,7 @@ callbacks = [
 ]
 
 print("Training model...")
-model.fit(
-    X_train, y_train,
-    epochs=50,
-    batch_size=32,
-    validation_data=(X_test, y_test),
-    callbacks=callbacks
-)
+model.fit(X_train, y_train, epochs=50, batch_size=32, validation_data=(X_test, y_test), callbacks=callbacks)
 
 loss, accuracy = model.evaluate(X_test, y_test)
 print("Test Accuracy:", accuracy*100)
