@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>AI Voice Detection</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+</head>
+
+<body style="font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;">
+
+<canvas id="network"></canvas>
+
+<div class="container">
+
+<header>
+<h1>TUNE TRACKER</h1>
+<p>Detect Human vs AI Generated Voice</p>
+</header>
+
+
+<!-- TOGGLE -->
+
+<div class="mode-switch">
+
+<button id="recordTab" class="active">🎤 Live Record</button>
+<button id="uploadTab">📂 Upload Audio</button>
+
+</div>
+
+
+<div class="main-grid">
+
+<!-- LEFT PANEL -->
+
+<div class="section">
+
+<!-- RECORD -->
+
+<div id="recordSection">
+
+<h2>Record Voice</h2>
+
+<button id="startMic">Start Microphone</button>
+<button id="stopMic">Stop & Save</button>
+
+<canvas id="wave"></canvas>
+
+</div>
+
+
+<!-- UPLOAD -->
+
+<div id="uploadSection">
+
+<h2>Upload Audio</h2>
+
+<label class="custom-file-btn">
+
+Choose Audio
+<input type="file" name="audio" id="audioFile">
+
+</label>
+
+<span class="file-name" id="fileName">No file chosen</span>
+
+</div>
+
+</div>
+
+
+<!-- RIGHT PANEL -->
+
+<div class="section">
+
+<h3>Audio Preview</h3>
+
+<audio id="player" controls></audio>
+
+<br><br>
+
+<form action="/predict" method="POST" enctype="multipart/form-data">
+
+<input type="file" name="audio" id="hiddenAudio" hidden>
+
+<button type="submit" class="analyze-btn">
+Analyze Voice
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+document.getElementById("audioFile").addEventListener("change",function(){
+
+document.getElementById("fileName").textContent=this.files[0].name
+document.getElementById("hiddenAudio").files=this.files
+
+})
+
+let recordTab=document.getElementById("recordTab")
+let uploadTab=document.getElementById("uploadTab")
+
+let recordSection=document.getElementById("recordSection")
+let uploadSection=document.getElementById("uploadSection")
+
+uploadSection.style.display="none"
+
+recordTab.onclick=function(){
+
+recordTab.classList.add("active")
+uploadTab.classList.remove("active")
+
+recordSection.style.display="block"
+uploadSection.style.display="none"
+
+}
+
+uploadTab.onclick=function(){
+
+uploadTab.classList.add("active")
+recordTab.classList.remove("active")
+
+recordSection.style.display="none"
+uploadSection.style.display="block"
+
+}
+
+</script>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+</html>

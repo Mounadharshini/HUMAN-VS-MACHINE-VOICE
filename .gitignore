@@ -1,0 +1,7 @@
+pycache__/
+*.pyc
+uploads/
+model.h5
+model.pkl
+scaler.pkl
+.env
